@@ -37,7 +37,7 @@ import com.FCI.SWE.Models.UserEntity;
  *
  */
 @Path("/")
-@Produces("text/html")
+@Produces(MediaType.TEXT_PLAIN)
 public class Service {
 	
 	
