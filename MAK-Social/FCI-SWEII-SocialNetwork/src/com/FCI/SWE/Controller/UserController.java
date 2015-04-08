@@ -19,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.json.simple.JSONObject;
@@ -90,57 +91,34 @@ public class UserController {
 	 */
 	@POST
 	@Path("/response")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String response(@FormParam("uname") String uname,
+	public Response response(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
-		String serviceUrl = "http://fci-swe-apps.appspot.com/rest/RegistrationService";
-		try {
-			URL url = new URL(serviceUrl);
-			String urlParameters = "uname=" + uname + "&email=" + email
-					+ "&password=" + pass;
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection();
-			connection.setDoOutput(true);
-			connection.setDoInput(true);
-			connection.setInstanceFollowRedirects(false);
-			connection.setRequestMethod("POST");
-			connection.setConnectTimeout(60000);  //60 Seconds
-			connection.setReadTimeout(60000);  //60 Seconds
-			connection.setRequestProperty("Content-Type",
-					"application/x-www-form-urlencoded;charset=UTF-8");
-			OutputStreamWriter writer = new OutputStreamWriter(
-					connection.getOutputStream());
-			writer.write(urlParameters);
-			writer.flush();
-			String line, retJson = "";
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					connection.getInputStream()));
-
-			while ((line = reader.readLine()) != null) {
-				retJson += line;
-			}
-			writer.close();
-			reader.close();
+		//"http://fci-swe-apps.appspot.com/rest/RegistrationService"
+		String serviceUrl = "http://localhost:8888/rest/RegistrationService";
+		String urlParameters = "uname=" + uname + "&email=" + email
+				+ "&password=" + pass;
+		String retJson = Connection.connect(serviceUrl, urlParameters, 
+				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+		try 
+		{			
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
-			if (object.get("Status").equals("OK"))
-				return "Registered Successfully";
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			if (object.get("Status").equals("OK")){
+				//return "Registered Successfully";
+				String success = "Registered Successfully, now login";
+				return Response.ok(new Viewable("/jsp/login", success)).build();
+			}
+		} 
+		catch (ParseException e) {
 			e.printStackTrace();
 		}
 		/*
 		 * UserEntity user = new UserEntity(uname, email, pass);
 		 * user.saveUser(); return uname;
 		 */
-		return "Failed";
+		String failed = "Registration failed try again!";
+		return Response.ok(new Viewable("/jsp/register", failed)).build();
 	}
 
 	/**
@@ -159,34 +137,12 @@ public class UserController {
 	@Produces("text/html")
 	public Response home(@FormParam("uname") String uname,
 			@FormParam("password") String pass) {
-		String serviceUrl = "http://fci-swe-apps.appspot.com/rest/LoginService";
-		try {
-			URL url = new URL(serviceUrl);
-			String urlParameters = "uname=" + uname + "&password=" + pass;
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection();
-			connection.setDoOutput(true);
-			connection.setDoInput(true);
-			connection.setInstanceFollowRedirects(false);
-			connection.setRequestMethod("POST");
-			connection.setConnectTimeout(60000);  //60 Seconds
-			connection.setReadTimeout(60000);  //60 Seconds
-			
-			connection.setRequestProperty("Content-Type",
-					"application/x-www-form-urlencoded;charset=UTF-8");
-			OutputStreamWriter writer = new OutputStreamWriter(
-					connection.getOutputStream());
-			writer.write(urlParameters);
-			writer.flush();
-			String line, retJson = "";
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					connection.getInputStream()));
-
-			while ((line = reader.readLine()) != null) {
-				retJson += line;
-			}
-			writer.close();
-			reader.close();
+		String serviceUrl = "http://localhost:8888/rest/LoginService";
+		String urlParameters = "uname=" + uname + "&password=" + pass;
+		String retJson = Connection.connect(serviceUrl, 
+				urlParameters, "POST", "application/x-www-form-urlencoded;charset=UTF-8");
+		
+		try{
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
@@ -197,14 +153,8 @@ public class UserController {
 			map.put("name", user.getName());
 			map.put("email", user.getEmail());
 			return Response.ok(new Viewable("/jsp/home", map)).build();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+		}
+		 catch (ParseException e) {
 			e.printStackTrace();
 		}
 		/*
@@ -214,6 +164,84 @@ public class UserController {
 		return null;
 
 	}
-
+	
+	@GET
+	@Path("/showFriendRequests")
+	public Response showFriendRequest() {
+		return Response.ok(new Viewable("/jsp/showFriendRequests")).build();
+	}
+	
+	@GET
+	@Path("/LogOut")
+	public Response logOut()
+	{
+		String logOutServiceUrl = "http://localhost:8888/rest/LogOutService";
+		String retMyJson = Connection.connect(
+				logOutServiceUrl, "", "POST", "application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser jParser = new JSONParser();
+		JSONObject object;
+		try {
+			object = (JSONObject) jParser.parse(retMyJson);
+			if(object.get("Status").equals("OK"))
+				return Response.ok(new Viewable("/jsp/entryPoint")).build();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@POST
+	@Path("/sendFriendRequest")
+	public Response sendFriendRequest(@FormParam("recieverMail") String recieverMail)
+	{
+		String serviceUrl = "http://localhost:8888/rest/SendFriendRequestService";
+		String urlParameters = "recieverMail=" + recieverMail;
+		String retMyJson = Connection.connect(serviceUrl, urlParameters, 
+				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser jParser = new JSONParser();
+		Object object;
+		try
+		{
+			object = jParser.parse(retMyJson);
+			JSONObject obj = (JSONObject) object;
+			if(obj.get("Status").equals("Failed"))
+				return null;
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("name", UserEntity.currentUser.getName());
+			map.put("email", UserEntity.currentUser.getEmail());
+			return Response.ok(new Viewable("/jsp/home", map)).build();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@POST
+	@Path("/acceptFriendRequest")
+	public Response acceptFriendRequest(@FormParam("friendRequestMail") String friendRequestMail)
+	{
+		String urlParameters = "friendRequestMail=" + friendRequestMail;
+		String serviceUrl = "http://localhost:8888/rest/acceptFriendRequestService";
+		String retJson = Connection.connect("http://localhost:8888/rest/acceptFriendRequestService", urlParameters,
+				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+        Object obj;
+        try {
+        	obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			if (object.get("Status").equals("Failed"))
+				return Response.ok(new Viewable("/jsp/showFriendRequests", "Failed")).build();
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("name", UserEntity.currentUser.getName());
+			map.put("email", UserEntity.currentUser.getEmail());
+			return Response.ok(new Viewable("/jsp/home", map)).build();
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+	}
 
 }

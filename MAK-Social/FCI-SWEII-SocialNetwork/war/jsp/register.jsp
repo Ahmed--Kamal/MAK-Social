@@ -6,12 +6,12 @@
   <title>Welcome!</title>
 </head>
 <body>
-  <form action="/social/response" method="post">
+  <form action="/social/response" method="post" style="text-align:center">
+  <p>${it}</p>
   Name : <input type="text" name="uname" /> <br>
   Email : <input type="text" name="email" /> <br>
   Password : <input type="password" name="password" /> <br>
   <input type="submit" value="Register">
-  
   </form>
 </body>
 </html>

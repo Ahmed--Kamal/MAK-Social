@@ -3,13 +3,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1256">
-<title>Insert title here</title>
+<title>Home</title>
 </head>
 <body>
-<p> Welcome b2a ya ${it.name} </p>
-<p> This is should be user home page </p>
-<p> Current implemented services "http://fci-swe-apps.appspot.com/rest/RegistrationService --- {requires: uname, email, password}" </p>
-<p> and "http://fci-swe-apps.appspot.com/rest/LoginService --- {requires: uname,  password}" </p>
-<p> you should implement sendFriendRequest service and addFriend service
+<div align="center" style="color:#C80000"><h3>Welcome: ${it.name}</h3></div>
+<div><a href="/social/showFriendRequests/"><b>Show Friend Requests</b></a></div>
+<div><a href="/social/sendAMessage/"><b>Send a message</b></a></div>
+<div align="right"><a href="/social/LogOut/"><b>Log Out</b></a><br></div>
+<form action="/social/sendFriendRequest" method="post">
+	<div align="left">
+	Send friend request to: <input type="text" name="recieverMail" placeholder="Enter reciever mail" />
+	<input type="submit" value="Send my request">
+	</div>
+</form>
 </body>
 </html>

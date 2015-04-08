@@ -39,8 +39,7 @@ import com.FCI.SWE.Models.UserEntity;
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
 public class Service {
-	
-	
+		
 	/*@GET
 	@Path("/index")
 	public Response index() {
@@ -65,37 +64,16 @@ public class Service {
 	public String registrationService(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
 		UserEntity user = new UserEntity(uname, email, pass);
-		user.saveUser();
 		JSONObject object = new JSONObject();
-		object.put("Status", "OK");
-		return object.toString();
-	}
-
-	/**
-	 * Login Rest Service, this service will be called to make login process
-	 * also will check user data and returns new user from datastore
-	 * @param uname provided user name
-	 * @param pass provided user password
-	 * @return user in json format
-	 */
-	@POST
-	@Path("/LoginService")
-	public String loginService(@FormParam("uname") String uname,
-			@FormParam("password") String pass) {
-		JSONObject object = new JSONObject();
-		UserEntity user = UserEntity.getUser(uname, pass);
-		if (user == null) {
-			object.put("Status", "Failed");
-
-		} else {
+		if(user.saveUser(user)){
 			object.put("Status", "OK");
-			object.put("name", user.getName());
-			object.put("email", user.getEmail());
-			object.put("password", user.getPass());
+			return object.toString();
 		}
-
-		return object.toString();
-
+		else
+		{
+			object.put("Status", "Failed");
+			return object.toString();
+		}
 	}
 
 }
