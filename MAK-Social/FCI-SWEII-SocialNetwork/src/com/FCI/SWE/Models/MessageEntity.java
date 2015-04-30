@@ -73,25 +73,24 @@ public class MessageEntity {
 		try {
 			Query gaeQuery = new Query("individualMessage");
 			PreparedQuery pq = datastore.prepare(gaeQuery);
-			List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
 			String messages="";
 			for (Entity entity : pq.asIterable())
 			{
 				if ((entity.getProperty("sender").equals(this.sender) && entity.getProperty("receiver").equals(this.receiver)))
-						messages+=entity.getProperty("sender") + ": " + entity.getProperty("messages").toString() + "\n";
-				else if((entity.getProperty("sender").equals(this.receiver) && entity.getProperty("reciever").equals(this.sender)))
-					messages+=entity.getProperty("sender") + ": " + entity.getProperty("messages").toString() + "\n";
+						messages+=entity.getProperty("sender") + ": " + entity.getProperty("message").toString() + "\n";
+				else if((entity.getProperty("sender").equals(this.receiver) && entity.getProperty("receiver").equals(this.sender)))
+					messages+=entity.getProperty("sender") + ": " + entity.getProperty("message").toString() + "\n";
 			}
-			String retMessages="";
-			for (int i = 0; i < messages.length(); ++i) {
+			//String retMessages="";
+			/*for (int i = 0; i < messages.length(); ++i) {
 				if (messages.charAt(i) == '\n') {
 					retMessages += "<br>";
 				} else {
 					retMessages += messages.charAt(i);
 				}
-			}
+			}*/
 			txn.commit();
-			return retMessages;
+			return messages;
 		}finally{
 			if (txn.isActive()) {
 		        txn.rollback();

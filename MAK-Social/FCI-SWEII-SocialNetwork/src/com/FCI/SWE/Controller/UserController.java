@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.Session;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -27,6 +28,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.FCI.SWE.Models.UserEntity;
+import com.google.apphosting.utils.config.ClientDeployYamlMaker.Request;
 
 /**
  * This class contains REST services, also contains action function for web
@@ -243,5 +245,27 @@ public class UserController {
         }
         return null;
 	}
-
+	
+	@POST
+	@Path("/searchTimeline")
+	public Response searchTimeline(@FormParam("userMail") String userMail)
+	{
+		String urlParameters = "userMail=" + userMail;
+		String serviceUrl = "http://localhost:8888/rest/searchTimelineService";
+		String retJson = Connection.connect("http://localhost:8888/rest/searchTimelineService", urlParameters,
+				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+        Object obj;
+        try {
+        	obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			if (object.get("Status").equals("Failed"))
+				return Response.ok(new Viewable("/jsp/home")).build();
+			return Response.ok(new Viewable("/jsp/userTimeline", object.get("posts"))).build();
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+		return null;
+	}
 }

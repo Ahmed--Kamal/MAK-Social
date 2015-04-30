@@ -136,4 +136,23 @@ public class UserService {
 		}
 		return object.toString();
 	}
+	
+	@POST
+	@Path("/searchTimelineService")
+	public String searchTimelineService(@FormParam("userMail") String userMail)
+	{
+		JSONObject object = new JSONObject();
+		UserEntity user = new UserEntity();
+		user = user.currentUser;
+		if (user == null)
+			object.put("Status", "Failed");
+		else
+		{
+			List<String> posts = user.getUserPosts(userMail);
+			object.put("Status", "OK");
+			object.put("posts", posts);
+			object.put("mail", userMail);
+		}
+		return object.toString();
+	}
 }

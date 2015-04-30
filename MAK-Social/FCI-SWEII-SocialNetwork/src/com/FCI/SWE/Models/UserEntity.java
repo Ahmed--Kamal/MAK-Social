@@ -32,6 +32,8 @@ public class UserEntity {
 	private String name;
 	private String email;
 	private String password;
+	private String visited;
+	public int numOfFriendRequest = 0;
 	public static UserEntity currentUser = null;
 
 	/**
@@ -48,7 +50,7 @@ public class UserEntity {
 		this.name = name;
 		this.email = email;
 		this.password = password;
-
+		
 	}
 
 	public String getName() {
@@ -73,7 +75,14 @@ public class UserEntity {
 		
 		return null;
 	}
-
+	public void setVisited(String v)
+	{
+		this.visited = v;
+	}
+	public String getVisited()
+	{
+		return this.visited;
+	}
 	/**
 	 * 
 	 * This static method will form UserEntity class using json format contains
@@ -182,6 +191,7 @@ public class UserEntity {
 	}
 	public List<String> getFriendRequests()
 	{
+		numOfFriendRequest = 0;
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		UserEntity user = new UserEntity();
@@ -193,6 +203,7 @@ public class UserEntity {
 		{
 			if (entity.getProperty("receiver").toString().equals(user.email)) {
 				emailRequests.add(entity.getProperty("sender").toString());
+				numOfFriendRequest++;
 			}
 		}
 		return emailRequests;
@@ -248,5 +259,32 @@ public class UserEntity {
 		    }
 		}
 	}
-	
+	public List<String> getUserPosts(String mail)
+	{
+		setVisited(mail);
+		List<String> posts = new ArrayList<String>();
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+		Query gaeQuery = new Query("userPost");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		try {
+			for (Entity entity : pq.asIterable())
+			{
+				if ((entity.getProperty("creator").equals(mail) && entity.getProperty("privacy").equals("public")))
+				{
+					posts.add(entity.getProperty("post").toString());
+					posts.add(entity.getProperty("feeling").toString());
+					posts.add(entity.getProperty("like").toString());
+					posts.add(entity.getKey().toString());
+				}
+			}
+			txn.commit();
+			return posts;
+		}finally{
+			if (txn.isActive()) {
+		        txn.rollback();
+		    }
+	}
+	}
 }

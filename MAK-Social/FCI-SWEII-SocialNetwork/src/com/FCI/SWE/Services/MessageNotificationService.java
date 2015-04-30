@@ -30,5 +30,14 @@ import com.FCI.SWE.Models.UserEntity;
 import com.google.appengine.api.datastore.Transaction;
 
 public class MessageNotificationService {
-
+	private String sender, receiver;
+	public MessageNotificationService(String sender, String receiver)
+	{
+		this.sender = sender;
+		this.receiver = receiver;
+	}
+	public void newMessageNotification()
+	{
+		
+	}
 }

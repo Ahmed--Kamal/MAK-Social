@@ -44,7 +44,7 @@ public class MessageService {
 		{
 			MessageEntity msgEntity = new MessageEntity(senderMessage, receiverMail);
 			msgEntity.saveAMessage();
-			String messages = msgEntity.getMessage();
+			String messages = msgEntity.getSenderMessage();
 			object.put("Status", "OK");
 			object.put("Chat", messages);
 		}
