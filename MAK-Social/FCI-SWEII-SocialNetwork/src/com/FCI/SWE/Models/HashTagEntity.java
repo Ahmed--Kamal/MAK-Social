@@ -19,24 +19,42 @@ import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.sun.org.apache.bcel.internal.generic.SWAP;
+/**
+ * 
+ * @author Ahmed
+ * This the Hashtag class that handles hashtag in each user post
+ */
 public class HashTagEntity {
-	private String hashTag;
 	private ArrayList<String> hashTags;
 	private ArrayList<Integer> trends;
-	public HashTagEntity(String hashTag)
+	/**
+	 * The constructor to initialize the hashTags and trends arraylist
+	 */
+	public HashTagEntity()
 	{
-		this.hashTag = hashTag;
 		hashTags = new ArrayList<String>();
 		trends = new ArrayList<Integer>();
 	}
+	/**
+	 * 
+	 * @return the hashtags array
+	 */
 	public ArrayList<String> getHashTags()
 	{
 		return this.hashTags;
 	}
+	/**
+	 * 
+	 * @return the trends array
+	 */
 	public ArrayList<Integer> getTrends()
 	{
 		return this.trends;
 	}
+	/**
+	 * this method opens the userPost table and add all hashtags in posts to
+	 * hashtags array then call method sortHashTags to sort as the trends
+	 */
 	public void addHashTag()
 	{
 		hashTags.clear();
@@ -101,6 +119,9 @@ public class HashTagEntity {
 		    }
 		}
 	}
+	/**
+	 * this method sort the hashtags array as its occurence in the trends array
+	 */
 	public void sortHashTags()
 	{
 		int size = hashTags.size();

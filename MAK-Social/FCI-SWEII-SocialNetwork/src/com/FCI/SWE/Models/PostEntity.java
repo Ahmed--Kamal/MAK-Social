@@ -17,13 +17,26 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+/**
+ * 
+ * @author Ahmed
+ * this class handles user posts and its like and share 
+ */
 public class PostEntity {
 	private String postContent, privacy, feeling;
 	private int like;
+	/**
+	 * Constructor
+	 */
 	public PostEntity()
 	{
-		
 	}
+	/**
+	 * Constructor that initialize the postContent, privacy and feeling
+	 * @param postContent that has the user post
+	 * @param privacy has the post privacy
+	 * @param feeling that has the user feeling
+	 */
 	public PostEntity(String postContent, String privacy, String feeling)
 	{
 		this.postContent = postContent;
@@ -31,18 +44,34 @@ public class PostEntity {
 		this.privacy = privacy;
 		this.like = 0;
 	}
+	/**
+	 * Getter
+	 * @return user postContent
+	 */
 	public String getPost()
 	{
 		return this.postContent;
 	}
+	/**
+	 * Getter
+	 * @return post privacy
+	 */
 	public String getPrivacy()
 	{
 		return this.privacy;
 	}
+	/**
+	 * Getter
+	 * @return post feeling
+	 */
 	public String getFeeling()
 	{
 		return this.feeling;
 	}
+	/**
+	 * this method opens userPost table to add the user post
+	 * @return true if post is added to userPost table
+	 */
 	public Boolean writePost()
 	{
 		UserEntity user = UserEntity.currentUser;
@@ -68,6 +97,10 @@ public class PostEntity {
 		}
 		return true;
 	}
+	/**
+	 * this method opens the userPost table and get all current user posts
+	 * @return the user posts 
+	 */
 	public List<String> getPosts()
 	{
 		List<String> posts = new ArrayList<String>();
@@ -97,6 +130,11 @@ public class PostEntity {
 		    }
 		}
 	}
+	/**
+	 * this method increases the post likes
+	 * @param key the post key
+	 * @return true if post likes is increased
+	 */
 	public Boolean increaseLikse(String key)
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -125,6 +163,11 @@ public class PostEntity {
 		}
 		return true;
 	}
+	/**
+	 * 
+	 * @param key
+	 * @return true if post is shared
+	 */
 	public Boolean sharePost(String key)
 	{
 		DatastoreService datastore = DatastoreServiceFactory

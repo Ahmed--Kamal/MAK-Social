@@ -34,7 +34,13 @@ import com.google.appengine.api.datastore.Transaction;
 @Path("/")
 @Produces("text/html")
 public class PostService {
-	
+	/**
+	 * this service will be called to add a user post
+	 * @param post hold the post content
+	 * @param privacy holds the privacy of the post
+	 * @param feeling holds the feeling of the post
+	 * @return object that holds the service status in json format
+	 */
 	@POST
 	@Path("/writePostService")
 	public String writePost(@FormParam("post")String post, @FormParam("privacy")String privacy,
@@ -51,7 +57,11 @@ public class PostService {
 		}
 		return object.toString();
 	}
-	
+	/**
+	 * this service will be called to increase a specific post like by its id
+	 * @param key holds the post key
+	 * @return response to the profile of the user
+	 */
 	@GET
 	@Path("/increaseLikesService")
 	public Response increaseLikes(@QueryParam("id") String key)
@@ -60,7 +70,11 @@ public class PostService {
 		post.increaseLikse(key);
 		return Response.ok(new Viewable("/jsp/profile")).build();
 	}
-	
+	/**
+	 * this service will be called to increase a specific post like by its id
+	 * @param key holds the post key
+	 * @return response to the visited user timeline
+	 */
 	@GET
 	@Path("/increaseUserLikesService")
 	public Response increaseUserLikes(@QueryParam("id") String key)
@@ -69,7 +83,11 @@ public class PostService {
 		post.increaseLikse(key);
 		return Response.ok(new Viewable("/jsp/userTimeline")).build();
 	}
-	
+	/**
+	 * This service will be called when a user share a post
+	 * @param key holds the post key that will be shared
+	 * @return response to the user profile
+	 */
 	@GET
 	@Path("/sharePostService")
 	public Response sharePost(@QueryParam("id2") String key)

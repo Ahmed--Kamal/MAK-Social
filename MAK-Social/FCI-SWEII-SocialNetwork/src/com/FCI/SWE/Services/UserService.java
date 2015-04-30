@@ -61,7 +61,10 @@ public class UserService {
 		return object.toString();
 
 	}
-	
+	/**
+	 * this service will e called when a user logout
+	 * @return object that holds the service status in json format
+	 */
 	@POST
 	@Path("/LogOutService")
 	public String logOutService()
@@ -77,7 +80,11 @@ public class UserService {
 		}
 		return object.toString();
 	}
-	
+	/**
+	 * This service will be called when a user send friend request to another user
+	 * @param recieverMail holds the request receiver mail
+	 * @return
+	 */
 	@POST
 	@Path("/SendFriendRequestService")
 	public String sendFriendRequest(@FormParam("recieverMail") String recieverMail)
@@ -93,7 +100,10 @@ public class UserService {
 		}
 		return object.toString();
 	}
-	
+	/**
+	 * This service will be called to get friend requests
+	 * @return object that holds list of friend requests in json format
+	 */
 	@POST
 	@Path("/getFriendRequestsService")
 	public String getFriendRequest() {
@@ -113,7 +123,11 @@ public class UserService {
 		}
 		return object.toString();
 	}
-	
+	/**
+	 * This service will be called when current user accept friend request
+	 * @param friendRequestMail holds the mail of request sender
+	 * @return object that holds status of service in json format
+	 */
 	@POST
 	@Path("/acceptFriendRequestService")
 	public String acceptFriendRequestService(@FormParam("friendRequestMail") String friendRequestMail)
@@ -136,7 +150,11 @@ public class UserService {
 		}
 		return object.toString();
 	}
-	
+	/**
+	 * This service will be called when a user search for another user timeline
+	 * @param userMail holds the user mail that current user search for
+	 * @return object that holds the visited user posts 
+	 */
 	@POST
 	@Path("/searchTimelineService")
 	public String searchTimelineService(@FormParam("userMail") String userMail)

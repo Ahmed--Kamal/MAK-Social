@@ -32,7 +32,12 @@ import com.google.appengine.api.datastore.Transaction;
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
 public class MessageService {
-	
+	/**
+	 * this service will be called to send sender message to receiver and save it in the datastore
+	 * @param receiverMail holds the receiver mail
+	 * @param senderMessage holds the sender mail who sent the message
+	 * @return object that holds data in json format
+	 */
 	@POST
 	@Path("/sendMessageService")
 	public String sendMessage(@FormParam("receiverMail")String receiverMail, @FormParam("senderMessage")String senderMessage)

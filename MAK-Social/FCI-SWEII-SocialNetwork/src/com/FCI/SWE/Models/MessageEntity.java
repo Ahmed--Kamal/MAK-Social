@@ -17,32 +17,49 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+/**
+ * 
+ * @author Ahmed
+ * this class handles message in the datastore
+ */
 public class MessageEntity {
 	private String receiver, sender, message;
-	private long messageId;
+	/**
+	 * Getter
+	 * @return the required message
+	 */
 	public String getMessage() {
 		return this.message;
 	}
+	/**
+	 * Getter
+	 * @return the receiver mail
+	 */
 	public String getReciever() {
 		return this.receiver;
 	}
+	/**
+	 * Getter
+	 * @return the sender mail
+	 */
 	public String getSender() {
 		return this.sender;
 	}
-	public void setMessageID(long id)
-	{
-		this.messageId = id;
-	}
-	public long getMessageID()
-	{
-		return this.messageId;
-	}
+	/**
+	 * Constructor 
+	 * @param message has the sender message
+	 * @param receiver the receiver mail
+	 */
 	public MessageEntity(String message, String receiver)
 	{
 		this.message = message;
 		this.receiver = receiver;
 		sender = UserEntity.currentUser.getEmail();
 	}
+	/**
+	 * This method saves the message in individualMessage table
+	 * @return true if message saved successfully
+	 */
 	public Boolean saveAMessage()
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -65,6 +82,10 @@ public class MessageEntity {
 		}
 		return true;
 	}
+	/**
+	 * This method uses sender mail and receiver mail and get all messages between them
+	 * @return the sender message
+	 */
 	public String getSenderMessage()
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -81,14 +102,6 @@ public class MessageEntity {
 				else if((entity.getProperty("sender").equals(this.receiver) && entity.getProperty("receiver").equals(this.sender)))
 					messages+=entity.getProperty("sender") + ": " + entity.getProperty("message").toString() + "\n";
 			}
-			//String retMessages="";
-			/*for (int i = 0; i < messages.length(); ++i) {
-				if (messages.charAt(i) == '\n') {
-					retMessages += "<br>";
-				} else {
-					retMessages += messages.charAt(i);
-				}
-			}*/
 			txn.commit();
 			return messages;
 		}finally{

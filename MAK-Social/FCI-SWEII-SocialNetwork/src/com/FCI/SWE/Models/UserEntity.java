@@ -19,14 +19,9 @@ import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 /**
- * <h1>User Entity class</h1>
- * <p>
- * This class will act as a model for user, it will holds user data
- * </p>
- *
- * @author Mohamed Samir
- * @version 1.0
- * @since 2014-02-12
+ * 
+ * @author Ahmed
+ * this class for handling user data in the datastore
  */
 public class UserEntity {
 	private String name;
@@ -52,18 +47,30 @@ public class UserEntity {
 		this.password = password;
 		
 	}
-
+	/**
+	 * Getter
+	 * @return user name
+	 */
 	public String getName() {
 		return name;
 	}
-
+	/**
+	 * Getter
+	 * @return user mail
+	 */
 	public String getEmail() {
 		return email;
 	}
-
+	/**
+	 * Getter
+	 * @return use password
+	 */
 	public String getPass() {
 		return password;
 	}
+	/**
+	 * Constructor 
+	 */
 	public UserEntity()
 	{
 		name="";
@@ -72,13 +79,20 @@ public class UserEntity {
 	}
 	public static UserEntity getCurrentUser()
 	{
-		
 		return null;
 	}
-	public void setVisited(String v)
+	/**
+	 * this method set the visited mail that current user visited
+	 * @param visited the mail of visited user by current user
+	 */
+	public void setVisited(String visited)
 	{
-		this.visited = v;
+		this.visited = visited;
 	}
+	/**
+	 * Getter
+	 * @return get the visited mail that current user visited
+	 */
 	public String getVisited()
 	{
 		return this.visited;
@@ -168,6 +182,11 @@ public class UserEntity {
 		}
 		return true;
 	}
+	/**
+	 * 
+	 * @param recieverMail the mail of the request receiver
+	 * @return true if friendRequest is saved
+	 */
 	public Boolean saveFriendRequest(String recieverMail)
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -189,6 +208,10 @@ public class UserEntity {
 		}
 		return true;
 	}
+	/**
+	 * This method open friendRequests table and return list of requests mail
+	 * @return emailRequests that holds all requests for the current user
+	 */
 	public List<String> getFriendRequests()
 	{
 		numOfFriendRequest = 0;
@@ -209,6 +232,11 @@ public class UserEntity {
 		return emailRequests;
 	}
 	
+	/**
+	 * this method open friendRequests table and add sender and receiver mail
+	 * @param friendRequestMail holds the request sender mail
+	 * @return the request key
+	 */
 	public Key addFriend(String friendRequestMail)
 	{
 		DatastoreService datastore = DatastoreServiceFactory
@@ -243,7 +271,10 @@ public class UserEntity {
 		}
 		return key;
 	}
-	
+	/**
+	 * this method removes the friend request by its key
+	 * @param key holds the friend request key
+	 */
 	public void removeRecord(Key key) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -259,6 +290,11 @@ public class UserEntity {
 		    }
 		}
 	}
+	/**
+	 * this method opens userPost table and return user post by taking its mail
+	 * @param mail holds the mail of specific user
+	 * @return the posts of the giving mail of user
+	 */
 	public List<String> getUserPosts(String mail)
 	{
 		setVisited(mail);
