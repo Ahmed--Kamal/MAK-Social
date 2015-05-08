@@ -51,7 +51,7 @@ org.json.simple.parser.*"%>
 	</div>
 </form><br>
 <%
-	HashTagEntity m = new HashTagEntity("asdsd");
+	HashTagEntity m = new HashTagEntity();
 		m.addHashTag();
 		ArrayList<String> hash = m.getHashTags();
 		for(int j=0;j<hash.size();j++){

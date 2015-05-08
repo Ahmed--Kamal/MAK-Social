@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/aopalliance-repackaged-2.4.0-b06.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-api-1.0-sdk-1.9.18.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-api-labs.jar"/>
